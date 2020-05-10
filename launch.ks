@@ -1,29 +1,29 @@
-parameter target_ap, pitch_sqrt_mod, pitch_pow_mod, pitch_line_mod.
+PARAMETER target_ap, pitch_sqrt_mod, pitch_pow_mod, pitch_line_mod.
 
-SET PITCH_MIN TO 5.
-SET SPEED_MIN TO 20.
+LOCAL PITCH_MIN TO 5.
+LOCAL SPEED_MIN TO 20.
 
 //////////
 // Open the throttle, but save the mono
-LOCK THROTTLE TO 1.0.
 RCS OFF.
+LOCK THROTTLE TO 1.0.
 
 // Point straight up
-SET HEAD TO HEADING(90,90).
+LOCAL HEAD TO HEADING(90,90).
 LOCK STEERING TO HEAD.
 
-STAGE.
+run doubleStage.
 
 UNTIL SHIP:APOAPSIS > target_ap {
 	// Handle steering
 
-	SET SPEED TO SHIP:VELOCITY:SURFACE:MAG.
+	LOCAL SPEED TO SHIP:VELOCITY:SURFACE:MAG.
 
 	IF SPEED < SPEED_MIN {
 		SET HEAD TO HEADING(90,90).
 	} ELSE {
-    SET AP TO SHIP:APOAPSIS.
-		SET PITCH TO ROUND(90 - SQRT(AP*pitch_sqrt_mod*0.01) + ((AP*pitch_pow_mod*0.000001)^2) + (AP*pitch_line_mod*0.00001), 1).
+    LOCAL AP TO SHIP:APOAPSIS.
+		Local PITCH TO ROUND(90 - SQRT(AP*pitch_sqrt_mod*0.01) + ((AP*pitch_pow_mod*0.000001)^2) + (AP*pitch_line_mod*0.00001), 1).
 		IF PITCH < PITCH_MIN SET PITCH TO PITCH_MIN.
 
 		SET HEAD TO HEADING(90, PITCH).
@@ -33,21 +33,24 @@ UNTIL SHIP:APOAPSIS > target_ap {
   LIST ENGINES IN ENGLIST.
   FOR ENG IN ENGLIST {
   	IF ENG:FLAMEOUT = TRUE {
-      STAGE.
+      RUN doubleStage.
       BREAK.
   	}.
   }.
 
 }.
 
+UNLOCK STEERING.
 LOCK THROTTLE TO 0.
 
 // We will want RCS here in case something goes wrong (like fast forward)
 RCS ON.
 SAS ON.
+LOCK THROTTLE TO 0.
+WAIT 0. // cant set sasmode on the same tick as sas
 SET SASMODE TO "PROGRADE".
 
-LOCK THROTTLE TO 0.
+WAIT UNTIL SHIP:ALTITUDE > 70000.
 
 // Because we can
 PANELS ON.
