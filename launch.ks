@@ -1,18 +1,17 @@
-PARAMETER target_ap, pitch_sqrt_mod, pitch_pow_mod, pitch_line_mod.
-
 LOCAL PITCH_MIN TO 5.
 LOCAL SPEED_MIN TO 20.
 
 //////////
 // Open the throttle, but save the mono
 RCS OFF.
+SAS OFF.
 LOCK THROTTLE TO 1.0.
 
 // Point straight up
 LOCAL HEAD TO HEADING(90,90).
 LOCK STEERING TO HEAD.
 
-run doubleStage.
+run KStage.
 
 UNTIL SHIP:APOAPSIS > target_ap {
 	// Handle steering
@@ -33,7 +32,7 @@ UNTIL SHIP:APOAPSIS > target_ap {
   LIST ENGINES IN ENGLIST.
   FOR ENG IN ENGLIST {
   	IF ENG:FLAMEOUT = TRUE {
-      RUN doubleStage.
+      RUN KStage.
       BREAK.
   	}.
   }.
