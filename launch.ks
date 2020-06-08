@@ -5,6 +5,8 @@ LOCAL SPEED_MIN TO 20.
 // Open the throttle, but save the mono
 RCS OFF.
 SAS OFF.
+WAIT 0.
+
 LOCK THROTTLE TO 1.0.
 
 // Point straight up
