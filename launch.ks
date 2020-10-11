@@ -1,3 +1,5 @@
+RUNPATH("1:/launchProfile.ks").
+
 LOCAL PITCH_MIN TO 5.
 LOCAL SPEED_MIN TO 20.
 

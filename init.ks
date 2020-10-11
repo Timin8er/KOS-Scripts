@@ -1,3 +1,5 @@
-local parameter init_file.
+local name is SHIP:SHIPNAME.
+set name to name:replace(" ", "").
 
-RUNPATH("0:/init_files/"+init_file+".ks").
+print("Initializing "+name).
+RUNPATH("0:/init_files/"+name+".init.ks").
